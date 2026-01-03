@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bio Data Generator</title>
+<style>
+body{
+    font-family:"Times New Roman", serif;
+    background:#f5f5f5;
+    margin:0;
+}
+.page{
+    width:800px;
+    min-height:1150px;
+    background:#fff;
+    margin:30px auto;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
+    position:relative;
+}
+
+/* HEADING */
+h2{
+    text-align:center;
+    text-decoration:underline;
+    margin:0 0 30px 0;
+    font-weight:bold;
+    font-size:28px;
+}
+
+/* TABLES */
+table{width:100%; font-size:16px; border-collapse:collapse;}
+td{padding:6px; vertical-align:middle; word-wrap:break-word;}
+.label{width:220px; font-weight:bold; text-transform:uppercase;}
+.label + td{
+    display:flex;
+    align-items:center;
+}
+.label + td input{
+    flex:1;
+    font-size:16px;
+    font-weight:bold;
+    padding:4px 6px;
+    border:none;
+    text-transform:uppercase;
+}
+textarea{
+    font-family:"Times New Roman", serif;
+    font-size:16px;
+    font-weight:bold;
+    text-transform:uppercase;
+    padding:4px 6px;
+    border:1px solid #999;
+    resize:none;
+    width:100%;
+    box-sizing:border-box;
+}
+
+/* EDUCATION TABLE */
+.edu-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+.edu-table th,
+.edu-table td{
+    border:1px solid #999;
+    padding:6px;
+    font-weight:bold;
+    font-size:15px;
+    word-wrap:break-word;
+    text-align:center;
+}
+.edu-table th{
+    background:#3f51b5;
+    color:#fff;
+    text-transform:uppercase;
+}
+.edu-table td > div{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:28px;
+    box-sizing:border-box;
+}
+.edu-table input, .edu-table select, .editable-cell{
+    width:100%;
+    text-align:center;
+    font-weight:bold;
+    text-transform:uppercase;
+    border:none;
+    background:transparent;
+}
+.editable-cell{min-height:28px; padding:4px 6px; overflow-wrap:break-word; white-space:normal;}
+.editable-cell:focus{outline:none;}
+
+/* PHOTO */
+.photo-box{
+    width:150px;
+    height:190px;
+    border:1px solid #000;
+    position:absolute;
+    top:60px;
+    right:50px;
+    overflow:hidden;
+    background:#fff;
+}
+.photo-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:top;
+}
+
+/* SECTION */
+.section{margin-top:25px;}
+.edu-buttons{
+    margin-top:5px;
+    text-align:left;
+}
+.edu-buttons button{
+    padding:4px 10px;
+    margin-right:6px;
+    font-size:14px;
+    font-weight:bold;
+    background:#3f51b5;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+/* CONTROLS */
+.controls{
+    text-align:center;
+    margin:20px 0 0 0;
+    position:relative;
+}
+.controls button, .controls input{
+    padding:6px 12px;
+    margin:4px;
+    font-size:14px;
+    font-weight:bold;
+    background:#3f51b5;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* DATE & PLACE */
+.date-place-container{
+    margin-top:30px;
+}
+.date-place-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+}
+.date-place-row label{
+    width:80px;
+    font-weight:bold;
+}
+.date-place-row input{
+    width:200px;
+    padding:4px 6px;
+    font-weight:bold;
+    font-size:16px;
+    text-transform:uppercase;
+    border:none;
+    border-bottom:1px solid #000;
+}
+
+/* SIGNATURE */
+.signature-container{
+    text-align:right;
+    margin-top:50px;
+}
+.signature-line{
+    border-top:1px solid #000;
+    width:120px; 
+    display:inline-block;
+}
+.signature{font-weight:bold; font-size:16px; margin-top:4px;}
+
+/* PRINT */
+@media print{
+    body{background:#fff;}
+    .controls, .edu-buttons{display:none;}
+    .page{margin:0; padding:20px; border:2px solid #000; box-shadow:none; border-radius:0;}
+    input, textarea, .editable-cell{
+        border:none; background:transparent; font-family:"Times New Roman", serif;
+        font-size:16px; font-weight:bold; text-transform:uppercase; box-sizing:border-box;
+        word-wrap:break-word; white-space:normal; line-height:1.4em;
+    }
+    select{-webkit-appearance:none; -moz-appearance:none; appearance:none; text-align:center;}
+    table, th, td{page-break-inside:avoid !important;}
+    .edu-table th{background:#3f51b5 !important; color:#fff !important; -webkit-print-color-adjust: exact;}
+    .edu-table input, .edu-table select, .edu-table .editable-cell{text-align:center;}
+}
+@page{size:A4; margin:15mm;}
+</style>
+
+<script>
+function uploadPhoto(e){document.getElementById("photo").src=URL.createObjectURL(e.target.files[0]);}
+function printPDF(){window.print();}
+
+// Education Table Rows
+function addRow(){
+    const t=document.getElementById("eduBody");
+    const r=t.insertRow();
+    r.innerHTML=`<td><div>
+        <select onchange="autoSubject(this)">
+            <option>MATRIC</option>
+            <option>HIGHER SECONDARY</option>
+            <option>GRADUATION</option>
+            <option>POST GRADUATION</option>
+            <option>DIPLOMA</option>
+            <option>B.TECH</option>
+            <option>M.TECH</option>
+        </select>
+    </div></td>
+    <td><div>
+        <select class="subject-select">
+            <option>ARTS</option>
+            <option>SCIENCE</option>
+            <option>COMMERCE</option>
+        </select>
+    </div></td>
+    <td><div class="editable-cell" contenteditable="true"></div></td>
+    <td><div><input></div></td>
+    <td><div><input></div></td>`;
+}
+
+// Auto subject logic
+function autoSubject(sel){
+    const tr=sel.closest('tr');
+    const subjSelect=tr.querySelector('.subject-select');
+    if(sel.value==="MATRIC") subjSelect.innerHTML='<option>N/A</option>';
+    else subjSelect.innerHTML='<option>ARTS</option><option>SCIENCE</option><option>COMMERCE</option>';
+}
+
+// Other autofill and formatting
+function formatDOB(e){
+    let v=e.value.replace(/\D/g,'');
+    if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);
+    if(v.length>5)v=v.slice(0,5)+'/'+v.slice(5,9);
+    e.value=v.toUpperCase();
+}
+function autoFillGender(e){let val=e.value.toUpperCase(); if(val=='M') e.value='MALE'; else if(val=='F') e.value='FEMALE';}
+function autoFillCommunity(e){let val=e.value.toUpperCase(); if(val=='G') e.value='GENERAL'; else if(val=='O') e.value='OBC'; else if(val=='S') e.value='SC/ST';}
+function autoFillReligion(e){let val=e.value.toUpperCase(); if(val=='H') e.value='HINDUISM'; else if(val=='I') e.value='ISLAM'; else if(val=='C') e.value='CHRISTIANITY'; else if(val=='B') e.value='BUDDHISM'; else if(val=='S') e.value='SIKHISM';}
+function autoFillMarital(e){let val=e.value.toUpperCase(); if(val=='M') e.value='MARRIED'; else if(val=='U') e.value='UNMARRIED';}
+function limitContact(e){e.value=e.value.replace(/\D/g,'').slice(0,10);}
+</script>
+
+</head>
+<body>
+
+<div class="controls">
+Upload Photo: <input type="file" accept="image/*" onChange="uploadPhoto(event)">
+<button onClick="printPDF()">Print / Save PDF</button>
+<br><small>A4 | Scale 100% | Headers & Footers OFF</small>
+</div>
+
+<div class="page">
+
+<div class="photo-box"><img id="photo"></div>
+
+<h2>BIO – DATA</h2>
+
+<table>
+<tr><td class="label">NAME</td><td>: <input></td></tr>
+<tr><td class="label">FATHER’S NAME</td><td>: <input></td></tr>
+<tr><td class="label">DATE OF BIRTH</td><td>: <input type="text" placeholder="DD/MM/YYYY" oninput="formatDOB(this)"></td></tr>
+<tr><td class="label">GENDER</td><td>: <input oninput="autoFillGender(this)"></td></tr>
+<tr><td class="label">COMMUNITY</td><td>: <input oninput="autoFillCommunity(this)"></td></tr>
+<tr><td class="label">NATIONALITY</td><td>: <input value="INDIAN"></td></tr>
+<tr><td class="label">RELIGION</td><td>: <input oninput="autoFillReligion(this)"></td></tr>
+<tr><td class="label">MARITAL STATUS</td><td>: <input oninput="autoFillMarital(this)"></td></tr>
+<tr><td class="label">CONTACT</td><td>: <input oninput="limitContact(this)" placeholder="10 digits"></td></tr>
+</table>
+
+<div class="section">
+<b><u>EDUCATIONAL QUALIFICATION</u></b>
+<table class="edu-table">
+<tr><th>EXAM</th><th>SUBJECT</th><th>BOARD / UNIVERSITY</th><th>PASSING YEAR</th><th>% OF MARKS</th></tr>
+<tbody id="eduBody">
+<tr>
+<td><div>
+<select onChange="autoSubject(this)">
+<option>MATRIC</option>
+<option>HIGHER SECONDARY</option>
+<option>GRADUATION</option>
+<option>POST GRADUATION</option>
+<option>DIPLOMA</option>
+<option>B.TECH</option>
+<option>M.TECH</option>
+</select>
+</div></td>
+<td><div>
+<select class="subject-select">
+<option>N/A</option>
+</select>
+</div></td>
+<td><div class="editable-cell" contenteditable="true"></div></td>
+<td><div><input></div></td>
+<td><div><input></div></td>
+</tr>
+</tbody>
+</table>
+
+<div class="edu-buttons">
+<button onClick="addRow()">+ Add Row</button>
+<button onClick="removeRow()">− Remove Row</button>
+</div>
+</div>
+
+<div class="section">
+  <p><b><u>EXTRA QUALIFICATION</u></b><br>
+      <input style="width:100%; font-weight:bold;">
+      <input name="Input" style="width:100%; font-weight:bold;">
+  </p>
+  </div>
+<div class="section">
+  <p><b><u>WORK EXPERIENCE</u></b><br>
+      <input style="width:100%; font-weight:bold;">
+      <input name="Input2" style="width:100%; font-weight:bold;">
+      <input name="Input3" style="width:100%; font-weight:bold;">
+      <input name="Input4" style="width:100%; font-weight:bold;">
+  </p>
+  </div>
+
+<div class="section">
+<b><u>PERMANENT ADDRESS</u></b><br>
+<textarea rows="4"></textarea>
+</div>
+
+<div class="date-place-container">
+<div class="date-place-row">
+<label>DATE :</label>
+<input type="text" placeholder="DD/MM/YYYY" oninput="formatDOB(this)">
+</div>
+<div class="date-place-row">
+<label>PLACE :</label>
+<input type="text" placeholder="PLACE">
+</div>
+</div>
+
+<div class="signature-container">
+<div class="signature-line"></div>
+<div class="signature">SIGNATURE</div>
+</div>
+
+</div>
+</body>
+</html>
