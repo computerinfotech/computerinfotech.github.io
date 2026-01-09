@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Computer Infotech</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVRC5GGE7J"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-KVRC5GGE7J');
+</script>
+
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#CCFFCC}
+
+/* CLOCK */
+.clock{
+ position:fixed;top:15px;left:12px;
+ background:linear-gradient(135deg,#000428,#004e92);
+ color:#00ffe7;padding:10px 14px;
+ font-size:13px;font-weight:bold;
+ border-radius:14px;z-index:1000;
+}
+
+/* ADMIN BUTTON */
+.admin-btn{
+ position:fixed;top:15px;right:15px;
+ background:#ff5722;color:#fff;
+ padding:7px 14px;border-radius:20px;
+ font-size:12px;font-weight:bold;
+ cursor:pointer;z-index:1000;
+}
+
+/* HEADER */
+.header-center{
+ background:#fff;text-align:center;
+ padding:18px 10px;
+ border-bottom:4px solid #004e92;
+}
+.header-center img{height:90px}
+.style1{font-size:24px;font-weight:bold;color:#ff00ff}
+
+/* MARQUEE */
+.header-marquee{
+ background:#f3f6f9;height:32px;
+ display:flex;align-items:center;
+ overflow:hidden;border-top:1px solid #ccc;
+}
+.header-marquee div{
+ white-space:nowrap;padding-left:100%;
+ animation:scroll 40s linear infinite;
+ font-weight:bold;color:red;
+}
+@keyframes scroll{to{transform:translateX(-100%)}}
+
+/* NAV */
+.nav{background:#004e92;text-align:center}
+.nav a{
+ color:#fff;padding:12px 14px;
+ display:inline-block;font-weight:bold;
+ text-decoration:none;
+}
+.nav a:hover{background:#003366}
+
+/* IMAGE MARQUEE */
+.image-marquee{background:#fff;padding:15px 10px;overflow:hidden}
+.image-track{
+ display:inline-block;
+ white-space:nowrap;
+ animation: imgScroll 25s linear infinite;
+}
+.image-track img{
+ width:140px;height:90px;object-fit:contain;
+ margin:0 10px;padding:6px;
+ border-radius:10px;
+ box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+@keyframes imgScroll{
+ 0%{transform:translateX(100%)}
+ 100%{transform:translateX(-100%)}
+}
+
+/* LAYOUT */
+.container{
+ display:grid;
+ grid-template-columns:1fr 2.5fr 1fr;
+ gap:15px;padding:15px;
+}
+.side-box{background:#fff;padding:10px}
+.side-box img,iframe,video{width:100%;border-radius:8px}
+
+/* NEWS */
+.news-box{background:#fff;height:380px;border:1px solid #ccc}
+.news-title{background:#004e92;color:#fff;padding:10px;font-weight:bold}
+.news-wrapper{height:300px;overflow:hidden;position:relative}
+.news-list{
+ position:absolute;width:100%;
+ animation:newsScroll 18s linear infinite;
+}
+@keyframes newsScroll{0%{top:100%}100%{top:-100%}}
+.news-item{
+ display:flex;justify-content:space-between;
+ padding:8px;border-bottom:1px dotted #aaa;
+ font-size:14px;font-weight:bold;
+}
+.tag{font-size:11px;padding:2px 8px;border-radius:12px;color:#fff}
+.new{background:#e53935}
+.avail{background:#43a047}
+
+/* SERVICES */
+#services{padding:30px 15px;background:#f7f9fc}
+#services h2{text-align:center;color:#004e92}
+.service-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.service-btn{
+ background:linear-gradient(135deg,#ff9800,#ff5722);
+ color:#fff;padding:10px 18px;
+ border-radius:22px;font-weight:bold;
+ font-size:13px;
+}
+
+/* FOOTER */
+.footer{
+ background:#004e92;color:#fff;
+ text-align:center;padding:15px;
+}
+
+/* LOGIN */
+.login-box{
+ position:fixed;top:50%;left:50%;
+ transform:translate(-50%,-50%);
+ background:#fff;padding:20px;
+ border-radius:10px;width:260px;
+ display:none;z-index:3000;
+}
+.login-box input,button{width:100%;padding:7px;margin:6px 0}
+</style>
+</head>
+
+<body>
+
+<div class="clock" id="clock"></div>
+<div class="admin-btn" onclick="showLogin()">ADMIN</div>
+
+<div class="header-center">
+ <img src="ALC01.png">
+ <div class="style1">SALES • SERVICE • TRAINING • ONLINE WORK</div>
+</div>
+
+<div class="header-marquee">
+ <div>COMPUTER INFOTECH : OLD G.T. ROAD, BUDBUD, PURBA BARDHAMAN</div>
+</div>
+
+<!-- ? FIXED NAV -->
+<div class="nav">
+ <a href="./repair.html">REPAIR</a>
+ <a href="./pan-card-record.html">PAN CARD RECORD</a>
+ <a href="./online-payment-mode.html">ONLINE PAYMENT MODE</a>
+ <a href="./bio-data.html">BIO-DATA</a>
+ <a href="./nycld.html">NYCLD ONLINE</a>
+ <a href="./main-file.html">MAIN FILE</a>
+ <a href="#services">SERVICES</a>
+ <a href="./invoice.html">INVOICE</a>
+ <a href="./safe-document-software.html">SAFE DOCUMENT SOFTWARE</a>
+ <a href="./daily-cash-ledger.html">DAILY CASH LEDGER</a>
+</div>
+
+<div class="image-marquee">
+ <div class="image-track">
+  <img src="1.jpeg"><img src="2.jpeg"><img src="3.jpeg">
+ </div>
+</div>
+
+<div class="container">
+ <div class="side-box">
+  <img src="CCCC.jpg">
+  <iframe src="https://www.google.com/maps?q=Computer+Infotech+Budbud&output=embed" height="220"></iframe>
+ </div>
+
+ <div class="news-box">
+  <div class="news-title">LATEST NEWS</div>
+  <div class="news-wrapper">
+   <div class="news-list" id="newsList"></div>
+  </div>
+ </div>
+
+ <div class="side-box">
+  <img src="DDDD.jpg">
+  <video src="VIDEO.mp4" controls></video>
+ </div>
+</div>
+
+<div id="services">
+<h2>OUR SERVICES</h2>
+<div class="service-grid">
+ <div class="service-btn">Computer Repair</div>
+ <div class="service-btn">Laptop Repair</div>
+ <div class="service-btn">Printer Repair</div>
+ <div class="service-btn">Online Services</div>
+</div>
+</div>
+
+<div class="footer">© 2025 Computer Infotech</div>
+
+<div class="login-box" id="loginBox">
+ <input id="user" placeholder="Username">
+ <input id="pass" type="password" placeholder="Password">
+ <button onclick="login()">LOGIN</button>
+</div>
+
+<script>
+/* CLOCK */
+setInterval(()=>{
+ let d=new Date();
+ clock.innerHTML=d.toLocaleDateString("en-IN")+"<br>"+d.toLocaleTimeString("en-IN");
+},1000);
+
+function showLogin(){loginBox.style.display="block"}
+function login(){
+ if(user.value==="cmpinfotech@007" && pass.value==="Sanjay@9932"){
+  alert("Admin Login Success");
+  loginBox.style.display="none";
+ }else alert("Wrong Login");
+}
+</script>
+
+</body>
+</html>
