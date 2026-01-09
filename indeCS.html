@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Computer Infotech | Premium Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+ margin:0;
+ font-family:'Inter',sans-serif;
+ background:linear-gradient(135deg,#0b1220,#050812);
+ color:#fff;
+}
+
+/* HEADER */
+.header{
+ background:rgba(255,255,255,.08);
+ backdrop-filter:blur(20px);
+ padding:15px 30px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+.header-left{
+ display:flex;
+ gap:15px;
+ align-items:center;
+}
+.header img{
+ height:70px;
+ background:#fff;
+ padding:10px;
+ border-radius:15px;
+}
+.header h1{margin:0;font-size:22px}
+.header small{font-size:13px;opacity:.8}
+.header button{
+ padding:10px 22px;
+ border:none;
+ border-radius:30px;
+ font-weight:bold;
+ cursor:pointer;
+ background:#d4af37;
+}
+
+/* MARQUEE */
+.marquee{
+ background:#000;
+ padding:10px;
+ overflow:hidden;
+ white-space:nowrap;
+}
+.marquee span{
+ display:inline-block;
+ padding-left:100%;
+ animation:mar 25s linear infinite;
+}
+@keyframes mar{to{transform:translateX(-100%)}}
+
+/* BANNERS */
+.banners{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:20px;
+ padding:30px;
+}
+.banners img{
+ width:100%;
+ height:240px;
+ object-fit:cover;
+ border-radius:25px;
+ box-shadow:0 20px 40px rgba(0,0,0,.6);
+}
+
+/* SERVICES */
+.services{
+ padding:30px;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:20px;
+}
+.service{
+ background:rgba(255,255,255,.1);
+ padding:20px;
+ border-radius:18px;
+ text-align:center;
+}
+.service img{
+ width:100%;
+ height:140px;
+ object-fit:cover;
+ border-radius:15px;
+ margin-bottom:10px;
+}
+.service h3{color:#d4af37;margin-bottom:5px}
+
+/* NEWS */
+.news-section{
+ margin:30px;
+ background:rgba(255,255,255,.1);
+ border-radius:25px;
+ padding:20px;
+}
+.news-title{
+ font-size:22px;
+ font-weight:800;
+ color:#d4af37;
+ margin-bottom:15px;
+}
+.news-viewport{
+ height:260px;
+ overflow:hidden;
+ background:rgba(0,0,0,.4);
+ border-radius:18px;
+ padding:10px;
+}
+.news-item{
+ background:rgba(255,255,255,.15);
+ margin-bottom:12px;
+ padding:12px 15px;
+ border-radius:15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+.news-text{font-weight:600}
+.news-date{font-size:11px;opacity:.8}
+
+.tag{
+ padding:4px 10px;
+ border-radius:20px;
+ font-size:11px;
+ font-weight:800;
+ color:#fff;
+}
+.new{background:red;animation:blink 1s infinite}
+.available{background:green}
+@keyframes blink{50%{opacity:.4}}
+
+.news-item button{
+ display:none;
+ background:#c0392b;
+ border:none;
+ color:#fff;
+ padding:4px 8px;
+ border-radius:6px;
+ cursor:pointer;
+}
+
+.admin-btns button{
+ display:none;
+ padding:8px 14px;
+ border:none;
+ border-radius:10px;
+ font-weight:bold;
+ cursor:pointer;
+}
+#addBtn{background:#28a745;color:#fff}
+#logoutBtn{background:#c0392b;color:#fff}
+
+/* FOOTER */
+.footer{
+ background:#050812;
+ padding:30px;
+}
+.footer-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:20px;
+}
+.footer-card{
+ background:rgba(255,255,255,.08);
+ padding:18px;
+ border-radius:18px;
+}
+.footer-card h3{color:#d4af37}
+.footer-bottom{text-align:center;margin-top:20px;font-size:13px;color:#aaa}
+
+@media(max-width:768px){
+ .banners{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+ <div class="header-left">
+  <img src="images/logo.png" onerror="this.src='https://via.placeholder.com/120x60?text=LOGO'">
+  <div>
+   <h1>COMPUTER INFOTECH</h1>
+   <small>Sales • Service • Training Centre</small>
+  </div>
+ </div>
+ <button onclick="login()">Admin Login</button>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee">
+ <span>PAN CARD • LAPTOP REPAIR • CSC SERVICES • ONLINE WORK • TRAINING CENTRE</span>
+</div>
+
+<!-- BANNERS -->
+<div class="banners">
+ <img src="images/banner1.jpg" onerror="this.src='https://via.placeholder.com/600x300?text=Banner+1'">
+ <img src="images/banner2.jpg" onerror="this.src='https://via.placeholder.com/600x300?text=Banner+2'">
+</div>
+
+<!-- SERVICES -->
+<div class="services">
+ <div class="service">
+  <img src="images/service1.jpg" onerror="this.src='https://via.placeholder.com/300x150'">
+  <h3>PAN Card</h3>
+  <p>Apply / Correction / Print</p>
+ </div>
+ <div class="service">
+  <img src="images/service2.jpg" onerror="this.src='https://via.placeholder.com/300x150'">
+  <h3>Laptop Repair</h3>
+  <p>Hardware & Software</p>
+ </div>
+</div>
+
+<!-- NEWS -->
+<div class="news-section">
+ <div class="news-title">LATEST NEWS</div>
+ <div class="news-viewport" id="viewport">
+  <div id="newsList"></div>
+ </div>
+ <div class="admin-btns">
+  <button id="addBtn" onclick="addNews()">➕ Add News</button>
+  <button id="logoutBtn" onclick="logout()">Logout</button>
+ </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+ <div class="footer-grid">
+  <div class="footer-card">
+   <h3>Computer Infotech</h3>
+   <p>Trusted Technology Partner</p>
+  </div>
+  <div class="footer-card">
+   <h3>Address</h3>
+   <p>Old G.T. Road, Budbud<br>Purba Bardhaman</p>
+  </div>
+  <div class="footer-card">
+   <h3>Location</h3>
+   <iframe src="https://www.google.com/maps?q=Old+GT+Road+Budbud+Purba+Bardhaman&output=embed"
+    width="100%" height="160" style="border:0;border-radius:12px"></iframe>
+  </div>
+ </div>
+ <div class="footer-bottom">© 2025 Computer Infotech</div>
+</div>
+
+<script>
+const USER="cmpinfotech@007";
+const PASS="Sanjay@9932";
+
+let news=JSON.parse(localStorage.getItem("ci_news"))||[
+ {text:"PAN Card Apply Available",date:"31-12-2025",tag:"new"},
+ {text:"Laptop Repair Service",date:"30-12-2025",tag:"available"}
+];
+
+const list=document.getElementById("newsList");
+const viewport=document.getElementById("viewport");
+
+function render(){
+ list.innerHTML="";
+ news.forEach((n,i)=>{
+  list.innerHTML+=`
+  <div class="news-item">
+   <div>
+    <div class="news-text">${n.text}</div>
+    <div class="news-date">${n.date}</div>
+   </div>
+   <div>
+    <span class="tag ${n.tag}">${n.tag.toUpperCase()}</span>
+    <button onclick="delNews(${i})">X</button>
+   </div>
+  </div>`;
+ });
+ adminUI();
+}
+render();
+
+/* SCROLL */
+let y=0,pause=false;
+setInterval(()=>{
+ if(pause)return;
+ y+=0.5;
+ viewport.scrollTop=y;
+ if(y>=list.scrollHeight-viewport.clientHeight)y=0;
+},30);
+viewport.onmouseenter=()=>pause=true;
+viewport.onmouseleave=()=>pause=false;
+
+/* ADMIN */
+function login(){
+ if(prompt("Username")===USER && prompt("Password")===PASS){
+  localStorage.setItem("ci_admin","yes");
+  alert("Admin Login Success");
+  render();
+ }else alert("Wrong Login");
+}
+function logout(){
+ localStorage.removeItem("ci_admin");
+ render();
+}
+function adminUI(){
+ let ok=localStorage.getItem("ci_admin")==="yes";
+ document.querySelectorAll(".news-item button").forEach(b=>b.style.display=ok?"inline":"none");
+ addBtn.style.display=ok?"inline":"none";
+ logoutBtn.style.display=ok?"inline":"none";
+}
+function addNews(){
+ let t=prompt("News Text");
+ let d=prompt("Date DD-MM-YYYY");
+ let g=prompt("Tag new / available");
+ if(t&&d&&g){
+  news.unshift({text:t,date:d,tag:g});
+  localStorage.setItem("ci_news",JSON.stringify(news));
+  render();
+ }
+}
+function delNews(i){
+ if(confirm("Delete?")){
+  news.splice(i,1);
+  localStorage.setItem("ci_news",JSON.stringify(news));
+  render();
+ }
+}
+</script>
+
+</body>
+</html>
