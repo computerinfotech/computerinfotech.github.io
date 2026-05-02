@@ -7,8 +7,15 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI, Arial;}
 body,html{height:100%;background:#f5f5f5; overflow-x: hidden;}
 button{cursor:pointer;}
+.daybook-btn{
+  background:#1565c0;
+  color:#fff;
+}
+.daybook-btn:hover{
+  background:#0d47a1;
+}
 
-/* --- LOGO 3D MOTION CSS WITH BG REMOVAL --- */
+/* --- LOGO 3D MOTION CSS --- */
 .moving-logo {
     position: absolute;
     top: 50%;
@@ -77,9 +84,39 @@ tfoot td{background:#ffd54f;font-weight:bold;font-size:18px;text-align:center;}
 .logout-btn{background:#c62828;}
 .daily-record-btn{background:#2e7d32;}
 
-.result-page{position:fixed; inset:0;background:#fffde7;display:flex;justify-content:center;align-items:center;z-index:99;opacity:0;transform:translateY(100%);transition:transform 2.5s ease,opacity 2.5s ease;}
-.result-page.show{transform:translateY(0);opacity:1;}
-.result-box{width:400px;background:#fff;padding:30px;border-radius:15px;box-shadow:0 20px 40px rgba(0,0,0,.35);text-align:left; animation:glow 2s ease infinite alternate;}
+.result-page{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+
+.result-page.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.result-box{
+  width:400px;
+  background:#fff;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  transform:scale(0.7);
+  transition:transform 0.3s ease;
+  text-align:left;
+}
+
+.result-page.show .result-box{
+  transform:scale(1);
+}
+.result-box{animation:glow 2s ease infinite alternate;}
 @keyframes glow{0%{box-shadow:0 0 20px rgba(103,58,183,0.5)}100%{box-shadow:0 0 40px rgba(103,58,183,1)}}
 .slip-head{text-align:center;font-weight:900;font-size:22px}
 .slip-sub{text-align:center;font-weight:bold;margin-bottom:12px}
@@ -94,19 +131,41 @@ tfoot td{background:#ffd54f;font-weight:bold;font-size:18px;text-align:center;}
 
 #dailyRecordOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;z-index:999;}
 .daily-record-box{background:#fff;padding:20px;border-radius:15px;width:700px;max-height:80%;overflow:auto;}
-.loader-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.9);display:none;justify-content:center;align-items:center;z-index:999;}
-.loader{width:70px;height:70px;border:8px solid #ddd;border-top:8px solid #673ab7;border-radius:50%;animation:spin 1s linear infinite;}
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.loader-overlay{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#000000cc,#1a237ecc);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  backdrop-filter: blur(6px);
+}
+.loader-box{text-align:center;color:#fff;}
+.loader-ring{
+  width:85px;height:85px;border-radius:50%;
+  border:6px solid transparent;
+  border-top:6px solid #00e5ff;
+  border-right:6px solid #ff4081;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+.loader-text{margin-top:15px;font-size:18px;font-weight:bold;}
+.loader-dots::after{content:"";animation:dots 1.5s infinite;}
+
+@keyframes spin{100%{transform:rotate(360deg);} }
+@keyframes dots{0%{content:"";}25%{content:".";}50%{content:"..";}75%{content:"...";}}
 .style5 {color: #FFFF00}
 .style6 {font-size: 50px}
+.style7 {color: #009900}
+.style8 {color: #FF0000}
 </style>
 </head>
 <body>
 
 <div id="loginOverlay">
   <div class="top-heading-container">
-      <h1 class="style6">COMPUTER INFOTECH</h1>
-      <p>OLD G.T. ROAD BUDBUD, PURBA BARDHAMAN</p>
+      <h1 class="style6"><img src="ALC01.jpg" width="1024" height="149"></h1>
   </div>
   <div class="login-box">
     <h2>Admin Login</h2>
@@ -119,6 +178,7 @@ tfoot td{background:#ffd54f;font-weight:bold;font-size:18px;text-align:center;}
 <div id="ledger">
   <div class="top-buttons">
     <button class="logout-btn" onClick="logout()">Logout</button>
+    <button class="daybook-btn" onClick="openDayBook()">Day Book</button>
     <button class="daily-record-btn" onClick="showDailyRecord()">Daily Record</button>
   </div>
 
@@ -160,8 +220,14 @@ tfoot td{background:#ffd54f;font-weight:bold;font-size:18px;text-align:center;}
     <div class="slip-head">COMPUTER INFOTECH</div>
     <div class="slip-sub">DAILY CASH RESULT</div>
     <div class="amount-line">Date : <span id="pDate"></span></div>
-    <div class="amount-line">System Closing : <span id="pSys"></span></div>
-    <div class="amount-line">Manual Closing : <span id="pMan"></span></div>
+    <div class="amount-line">
+      <span class="style7">System Closing :</span> 
+      <span id="pSys"></span>
+    </div>
+    <div class="amount-line">
+      <span class="style8">Manual Closing :</span> 
+      <span id="pMan"></span>
+    </div>
     <div class="amount-line">Admin : <span id="pAdmin"></span></div>
     <div class="result-text" id="pResult"></div>
     <div class="result-actions">
@@ -185,7 +251,10 @@ tfoot td{background:#ffd54f;font-weight:bold;font-size:18px;text-align:center;}
 </div>
 
 <div class="loader-overlay" id="loader">
-  <div class="loader"></div>
+  <div class="loader-box">
+    <div class="loader-ring"></div>
+    <div class="loader-text">Processing<span class="loader-dots"></span></div>
+  </div>
 </div>
 
 <script>
@@ -229,7 +298,7 @@ function addRow(id){
   let input=document.createElement("input");
   input.type="text"; input.placeholder="₹";
   input.onfocus=function(){if(!this.value)this.value="₹ ";};
-  input.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault(); let r=addRow(id); undoStack.push(r); setTimeout(()=>r.querySelector("input").focus(),10);}};
+  input.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault(); let r=addRow(id); undoStack.push(r); setTimeout(()=>r.querySelector("input").focus(),10);}}; 
   input.oninput=function(){let v=this.value.replace(/[^\d]/g,''); this.value=v?"₹ "+v:""; calculate();};
   td.appendChild(input); tr.appendChild(td); document.getElementById(id).appendChild(tr); return tr;
 }
@@ -247,39 +316,60 @@ function calculate(){
 function manualFocus(el){if(!el.value)el.value="₹ "; }
 function formatManual(el){let v=el.value.replace(/[^\d]/g,''); el.value=v?"₹ "+v:""; if(v)el.classList.remove("blink");}
 
-// Result
+// Result popup
 function showResult(){
-  let manVal=Number(document.getElementById("manual").value.replace("₹ ",""));
-  if(!manVal){document.getElementById("manual").classList.add("blink");document.getElementById("manual").focus(); return;}
-  document.getElementById("loader").style.display="flex";
-  setTimeout(()=>{
-    let sys=Number(document.getElementById("system").innerText.replace("₹ ",""));
-    let diff=manVal-sys;
-    document.getElementById("pDate").innerText=document.getElementById("today").value;
-    document.getElementById("pSys").innerText="₹ "+sys;
-    document.getElementById("pMan").innerText="₹ "+manVal;
-    document.getElementById("pAdmin").innerText=currentAdmin;
-    let pResult=document.getElementById("pResult");
-    pResult.className="result-text";
-    if(diff===0){pResult.textContent="✔ Perfect Balance";pResult.classList.add("green");}
-    else if(diff>0){pResult.textContent="Increase / Extra : ₹ "+diff;pResult.classList.add("blue");}
-    else{pResult.textContent="Decrease / Short : ₹ "+Math.abs(diff);pResult.classList.add("red");}
-    document.getElementById("loader").style.display="none";
-    document.getElementById("ledger").style.display="none";
-    document.getElementById("resultPage").classList.add("show");
-  },2500);
-}
-function hideResult(){document.getElementById("resultPage").classList.remove("show"); document.getElementById("ledger").style.display="block";}
+    let manVal = Number(document.getElementById("manual").value.replace(/[^\d]/g,''));
+    if(!manVal){
+        document.getElementById("manual").classList.add("blink");
+        document.getElementById("manual").focus();
+        return;
+    }
 
-// Save record persistently
+    const loader = document.getElementById("loader");
+    loader.style.display = "flex";
+
+    setTimeout(()=>{
+        let sys = Number(document.getElementById("system").innerText.replace(/[^\d]/g,''));
+        let diff = manVal - sys;
+
+        document.getElementById("pSys").innerText = "₹ "+sys;
+        document.getElementById("pMan").innerText = "₹ "+manVal;
+        document.getElementById("pDate").innerText = document.getElementById("today").value;
+        document.getElementById("pAdmin").innerText = currentAdmin;
+
+        let pResult = document.getElementById("pResult");
+        pResult.className = "result-text";
+        if(diff === 0){
+            pResult.textContent = "✔ Perfect Balance";
+            pResult.classList.add("green");
+        } else if(diff > 0){
+            pResult.textContent = "Increase / Extra : ₹ " + diff;
+            pResult.classList.add("blue");
+        } else {
+            pResult.textContent = "Decrease / Short : ₹ " + Math.abs(diff);
+            pResult.classList.add("red");
+        }
+
+        loader.style.display = "none";
+        document.getElementById("ledger").style.display = "none";
+        document.getElementById("resultPage").classList.add("show");
+    },2000);
+}
+
+function hideResult(){
+    document.getElementById("resultPage").classList.remove("show");
+    document.getElementById("ledger").style.display = "block";
+}
+
+// Save record
 function saveRecord(){
-  let date=document.getElementById("today").value;
-  let sys=document.getElementById("system").innerText;
-  let man=document.getElementById("manual").value;
-  let status=document.getElementById("pResult").textContent;
-  dailyRecords.push({date,sys,man,status,admin:currentAdmin});
-  localStorage.setItem("dailyRecords", JSON.stringify(dailyRecords));
-  alert("Record Saved!");
+    let date=document.getElementById("today").value;
+    let sys=document.getElementById("system").innerText;
+    let man=document.getElementById("manual").value;
+    let status=document.getElementById("pResult").textContent;
+    dailyRecords.push({date,sys,man,status,admin:currentAdmin});
+    localStorage.setItem("dailyRecords", JSON.stringify(dailyRecords));
+    alert("Record Saved!");
 }
 
 // Daily record overlay
@@ -293,22 +383,13 @@ function showDailyRecord(){
   document.getElementById("dailyRecordOverlay").style.display="flex";
 }
 function hideDailyRecord(){document.getElementById("dailyRecordOverlay").style.display="none";}
-
-// Delete manually
-function deleteRecord(i){
-  if(confirm("Are you sure you want to delete this record?")){
-    dailyRecords.splice(i,1);
-    localStorage.setItem("dailyRecords", JSON.stringify(dailyRecords));
-    showDailyRecord();
-  }
-}
+function deleteRecord(i){ if(confirm("Are you sure you want to delete this record?")){ dailyRecords.splice(i,1); localStorage.setItem("dailyRecords", JSON.stringify(dailyRecords)); showDailyRecord(); }}
 
 // Logout
-function logout(){
-  document.getElementById("ledger").style.display="none";
-  document.getElementById("loginOverlay").style.display="flex";
-  document.getElementById("adminMobile").value="";
-}
+function logout(){ document.getElementById("ledger").style.display="none"; document.getElementById("loginOverlay").style.display="flex"; document.getElementById("adminMobile").value=""; }
+
+// Open DayBook PDF
+function openDayBook(){ window.open("daybook.pdf", "_blank"); }
 </script>
 </body>
 </html>
