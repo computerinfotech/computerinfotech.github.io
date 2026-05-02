@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Fees Receipt System</title>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#fff8dc;
+font-weight:bold;
+text-transform:uppercase;
+}
+
+.mainBox{
+width:95%;
+margin:auto;
+background:white;
+border-radius:12px;
+box-shadow:0 0 15px rgba(0,0,0,0.2);
+padding:20px;
+margin-top:20px;
+border:3px solid black;
+}
+
+.header{text-align:center;}
+.header img{height:150px;}
+
+.titleBox{
+display:inline-block;
+padding:10px 30px;
+border:3px solid black;
+border-radius:10px;
+background:#1976d2;
+color:white;
+margin-top:10px;
+font-size:22px;
+}
+
+.form{
+display:flex;
+gap:10px;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:20px;
+background:#f2f2f2;
+padding:15px;
+border-radius:10px;
+border:2px solid black;
+}
+
+input,select{
+padding:8px;
+border:2px solid black;
+font-weight:bold;
+text-align:center;
+border-radius:6px;
+text-transform:uppercase;
+}
+
+button{
+padding:7px 15px;
+margin:4px;
+border:none;
+cursor:pointer;
+font-weight:bold;
+border-radius:6px;
+color:white;
+}
+
+.saveBtn{background:#2e7d32;}
+.printBtn{background:#1565c0;}
+.deleteBtn{background:#c62828;}
+.historyBtn{background:#6a1b9a;}
+.editBtn{background:#f57c00;}
+
+.searchBox{
+text-align:center;
+margin-top:20px;
+}
+
+.searchBox input{
+width:250px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+font-size:14px;
+}
+
+th{
+background:#222;
+color:white;
+padding:10px;
+border:1px solid black;
+text-align:center;
+}
+
+td{
+padding:8px;
+border:1px solid black;
+background:#fafafa;
+text-align:center;
+}
+
+.totalBox{
+margin-top:15px;
+text-align:right;
+font-size:18px;
+color:#d32f2f;
+}
+
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+}
+
+.popupContent{
+background:white;
+width:400px;
+padding:20px;
+margin:120px auto;
+border-radius:10px;
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="mainBox">
+
+<div class="header">
+
+<img src="ALC01.png">
+
+<div class="titleBox">
+Monthly Fees Receipt System
+</div>
+
+</div>
+
+<div class="form">
+
+<input id="student" placeholder="Student Name">
+<input id="father" placeholder="Father Name">
+<input type="number" id="fees" placeholder="Fees">
+
+<select id="month">
+<option>JAN</option><option>FEB</option><option>MAR</option>
+<option>APR</option><option>MAY</option><option>JUN</option>
+<option>JUL</option><option>AUG</option><option>SEP</option>
+<option>OCT</option><option>NOV</option><option>DEC</option>
+</select>
+
+<input type="date" id="date">
+
+<select id="mode">
+<option>CASH</option>
+<option>UPI</option>
+<option>CARD</option>
+</select>
+
+<button class="saveBtn" onclick="save()">SAVE & PRINT</button>
+
+</div>
+
+<div class="searchBox">
+
+<input id="search" placeholder="SEARCH STUDENT NAME" onkeyup="searchStudent()">
+<button class="historyBtn" onclick="studentHistory()">STUDENT HISTORY</button>
+
+</div>
+
+<table id="table">
+
+<tr>
+<th>RECEIPT</th>
+<th>STUDENT</th>
+<th>FATHER</th>
+<th>FEES</th>
+<th>MONTH</th>
+<th>DATE</th>
+<th>MODE</th>
+<th>ACTION</th>
+</tr>
+
+</table>
+
+<div class="totalBox">
+TOTAL FEES = ₹ <span id="totalFees">0</span>
+</div>
+
+</div>
+
+<div class="popup" id="editPopup">
+
+<div class="popupContent">
+
+<h3>EDIT RECEIPT</h3>
+
+<input id="editStudent"><br><br>
+<input id="editFather"><br><br>
+<input id="editFees" type="number"><br><br>
+
+<select id="editMonth">
+<option>JAN</option><option>FEB</option><option>MAR</option>
+<option>APR</option><option>MAY</option><option>JUN</option>
+<option>JUL</option><option>AUG</option><option>SEP</option>
+<option>OCT</option><option>NOV</option><option>DEC</option>
+</select><br><br>
+
+<select id="editMode">
+<option>CASH</option>
+<option>UPI</option>
+<option>CARD</option>
+</select><br><br>
+
+<button class="saveBtn" onclick="updateRecord()">SAVE</button>
+<button class="deleteBtn" onclick="closePopup()">CANCEL</button>
+
+</div>
+
+</div>
+
+<script>
+
+let records = JSON.parse(localStorage.getItem("records")) || []
+let counter = Number(localStorage.getItem("counter")) || 351
+let editReceiptNo=""
+
+window.onload=function(){
+
+records.forEach(r=>addRow(r))
+calculateTotal()
+
+}
+
+function save(){
+
+let student=document.getElementById("student").value.toUpperCase()
+let father=document.getElementById("father").value.toUpperCase()
+let fees=document.getElementById("fees").value
+let month=document.getElementById("month").value
+let date=document.getElementById("date").value
+let mode=document.getElementById("mode").value
+
+if(student==""||fees==""){
+alert("ENTER STUDENT AND FEES")
+return
+}
+
+let no=String(counter).padStart(4,"0")
+let receipt=`CI/NYCLD/${no}-2026-2026`
+
+let rec={receipt,student,father,fees,month,date,mode}
+
+records.push(rec)
+
+localStorage.setItem("records",JSON.stringify(records))
+
+counter++
+localStorage.setItem("counter",counter)
+
+addRow(rec)
+
+printReceipt(rec)
+
+calculateTotal()
+
+}
+
+function addRow(r){
+
+let row=document.getElementById("table").insertRow()
+
+row.insertCell(0).innerText=r.receipt
+row.insertCell(1).innerText=r.student
+row.insertCell(2).innerText=r.father
+row.insertCell(3).innerText=r.fees
+row.insertCell(4).innerText=r.month
+row.insertCell(5).innerText=r.date
+row.insertCell(6).innerText=r.mode
+
+row.insertCell(7).innerHTML=
+`<button class="printBtn" onclick="printReceiptByNo('${r.receipt}')">PRINT</button>
+<button class="printBtn" onclick="printReceiptByNo('${r.receipt}')">DUPLICATE</button>
+<button class="editBtn" onclick="openEdit('${r.receipt}')">EDIT</button>
+<button class="deleteBtn" onclick="deleteRecord('${r.receipt}')">DELETE</button>`
+
+}
+
+function openEdit(no){
+
+let r = records.find(x => x.receipt == no)
+
+editReceiptNo=no
+
+document.getElementById("editStudent").value=r.student
+document.getElementById("editFather").value=r.father
+document.getElementById("editFees").value=r.fees
+document.getElementById("editMonth").value=r.month
+document.getElementById("editMode").value=r.mode
+
+document.getElementById("editPopup").style.display="block"
+
+}
+
+function updateRecord(){
+
+let r = records.find(x => x.receipt == editReceiptNo)
+
+r.student=document.getElementById("editStudent").value.toUpperCase()
+r.father=document.getElementById("editFather").value.toUpperCase()
+r.fees=document.getElementById("editFees").value
+r.month=document.getElementById("editMonth").value
+r.mode=document.getElementById("editMode").value
+
+localStorage.setItem("records",JSON.stringify(records))
+
+location.reload()
+
+}
+
+function closePopup(){
+document.getElementById("editPopup").style.display="none"
+}
+
+function deleteRecord(no){
+
+records = records.filter(r => r.receipt != no)
+
+localStorage.setItem("records",JSON.stringify(records))
+
+location.reload()
+
+}
+
+function printReceiptByNo(no){
+
+let r = records.find(x => x.receipt == no)
+
+printReceipt(r)
+
+}
+
+function searchStudent(){
+
+let input=document.getElementById("search").value.toUpperCase()
+let tr=document.getElementById("table").getElementsByTagName("tr")
+
+for(let i=1;i<tr.length;i++){
+
+let td=tr[i].getElementsByTagName("td")[1]
+
+if(td){
+let txt=td.textContent||td.innerText
+tr[i].style.display=txt.toUpperCase().indexOf(input)>-1?"":"none"
+}
+
+}
+
+}
+
+function calculateTotal(){
+
+let total=0
+records.forEach(r=>{total+=Number(r.fees)})
+document.getElementById("totalFees").innerText=total
+
+}
+
+function studentHistory(){
+
+let name=prompt("ENTER STUDENT NAME")
+
+let total=0
+
+records.forEach(r=>{
+if(r.student.toUpperCase()==name.toUpperCase()){
+total+=Number(r.fees)
+}
+})
+
+alert(name+" TOTAL FEES PAID = ₹ "+total)
+
+}
+
+/* RECEIPT PRINT SAME */
+
+function printReceipt(r){
+
+let win=window.open("","","width=900,height=700")
+
+win.document.write(`
+<style>
+body{font-family:Arial;}
+.receipt{width:148mm;height:210mm;border:2px solid black;padding:20px;position:relative;}
+.logo{text-align:center;}
+.barcode{text-align:center;margin-top:10px;}
+.qr{text-align:center;margin-top:10px;}
+.signBox{position:absolute;right:40px;bottom:60px;text-align:center;}
+.signBox img{width:150px;}
+</style>
+
+<div class="receipt">
+
+<div class="logo">
+<img src="ALC01.png" width="320">
+<h2>MONTHLY FEES RECEIPT</h2>
+</div>
+
+<div class="barcode">
+<svg id="barcode"></svg>
+</div>
+
+<p><b>Receipt No:</b> ${r.receipt}</p>
+<p><b>Student:</b> ${r.student}</p>
+<p><b>Father:</b> ${r.father}</p>
+<p><b>Fees:</b> ₹ ${r.fees}</p>
+<p><b>Month:</b> ${r.month}</p>
+<p><b>Date:</b> ${r.date}</p>
+<p><b>Mode:</b> ${r.mode}</p>
+
+<div class="qr" id="qrcode"></div>
+
+<div class="signBox">
+<img src="STAMP CI WITH SIGN.jpg">
+<br>Authorized Signature
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"><\/script>
+
+<script>
+JsBarcode("#barcode","${r.receipt}",{width:1,height:40,fontSize:14})
+new QRCode(document.getElementById("qrcode"),{
+text:"upi://pay?pa=8250915598@ibl&pn=FEES&am=${r.fees}&cu=INR",
+width:120,height:120
+})
+window.print()
+<\/script>
+`)
+
+}
+
+</script>
+
+</body>
+</html>

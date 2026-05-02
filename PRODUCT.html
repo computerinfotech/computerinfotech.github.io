@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Premium Product Search</title>
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:linear-gradient(135deg,#ff6ec4,#7873f5,#42e695,#fddb92);
+  background-size:400% 400%;
+  animation:gradientBG 15s ease infinite;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  color:#1f2937;
+  min-height:100vh;
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.header{
+  margin-top:30px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(15px);
+  padding:25px 80px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  text-align:center;
+}
+.header h2{
+  margin:0; 
+  font-size:28px; 
+  color:#fff; 
+  letter-spacing:2px; 
+  text-shadow:2px 2px 12px rgba(0,0,0,0.4);
+}
+.header h3{
+  margin:5px 0 20px 0; 
+  font-size:18px; 
+  color:#f0f0f0; 
+  letter-spacing:1px; 
+  text-shadow:1px 1px 8px rgba(0,0,0,0.3);
+}
+
+.topBtn{
+  margin-top:20px;
+  background:linear-gradient(90deg,#ff416c,#ff4b2b);
+  color:#fff;
+  padding:14px 30px;
+  border:none;
+  border-radius:20px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.3s;
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+.topBtn:hover{
+  transform:scale(1.08);
+  box-shadow:0 8px 25px rgba(0,0,0,0.35);
+}
+
+#searchPanel{
+  margin-top:30px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(15px);
+  padding:35px 50px;
+  border-radius:25px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.25);
+  position:relative;
+  text-align:center;
+}
+#searchPanel input{
+  width:320px;
+  padding:16px;
+  font-size:16px;
+  border:none;
+  border-radius:20px;
+  text-align:center;
+  text-transform:uppercase;
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(6px);
+  color:#000;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.1);
+  transition:all 0.3s;
+}
+#searchPanel input:focus{
+  outline:none;
+  box-shadow:0 0 15px #ff416c;
+}
+#searchPanel button{
+  margin-top:15px;
+  padding:12px 28px;
+  border:none;
+  border-radius:20px;
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+#searchPanel button:hover{
+  transform:scale(1.05);
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+#suggestions{
+  position:absolute;
+  top:80px;
+  left:50%;
+  transform:translateX(-50%);
+  width:320px;
+  background:rgba(255,255,255,0.85);
+  border-radius:12px;
+  display:none;
+  max-height:220px;
+  overflow-y:auto;
+  box-shadow:0 8px 25px rgba(0,0,0,0.3);
+  z-index:99;
+}
+#suggestions div{
+  padding:12px;
+  cursor:pointer;
+  font-size:15px;
+  border-bottom:1px solid rgba(0,0,0,0.05);
+}
+#suggestions div:hover{
+  background:rgba(255,65,108,0.2);
+}
+
+.popupOverlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+  z-index:100;
+}
+.popupBox{
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(20px);
+  padding:30px 40px;
+  border-radius:25px;
+  width:800px;
+  max-height:80%;
+  overflow:auto;
+  box-shadow:0 12px 45px rgba(0,0,0,0.35);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  font-size:15px;
+}
+th,td{
+  border:1px solid rgba(0,0,0,0.1);
+  padding:12px;
+  text-align:center;
+  background:rgba(255,255,255,0.25);
+  border-radius:12px;
+}
+th{
+  background:rgba(255,255,255,0.45);
+  color:#000;
+  font-weight:700;
+}
+
+.editBtn{
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+  color:#fff;
+  border:none;
+  padding:8px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.editBtn:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+.deleteBtn{
+  background:linear-gradient(90deg,#dc2626,#ef4444);
+  color:#fff;
+  border:none;
+  padding:8px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.deleteBtn:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+
+.closeBtn{
+  background:linear-gradient(90deg,#dc2626,#ef4444);
+  color:#fff;
+  border:none;
+  padding:10px 24px;
+  border-radius:15px;
+  margin-top:15px;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.closeBtn:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 25px rgba(0,0,0,0.3);
+}
+
+input.edit, textarea.edit{
+  width:95%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:20px;
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(6px);
+  text-transform:uppercase;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.1);
+  transition:all 0.3s;
+}
+input.edit:focus, textarea.edit:focus{
+  outline:none;
+  box-shadow:0 0 15px #2563eb;
+}
+.style1 {
+	font-size: 55px;
+	color: #FFFF00;
+	font-weight: bold;
+}
+.style2 {
+	color: #FF0000;
+	font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<button class="topBtn" onClick="openAdmin()">ADMIN LOGIN</button>
+
+<div class="header">
+  <h2><span class="style1">COMPUTER INFOTECH</span></h2>
+  <h3 class="style2">BUDBUD, PURBA BARDHAMAN</h3>
+</div>
+
+<div id="searchPanel">
+  <input id="searchInput" placeholder="TYPE PRODUCT NAME">
+  <div id="suggestions"></div>
+  <br>
+  <button onClick="searchProduct()">SEARCH</button>
+</div>
+
+<div class="popupOverlay" id="resultPopup">
+  <div class="popupBox">
+    <h3>SEARCH RESULT</h3>
+    <table id="resultTable">
+      <tr>
+        <th>PRODUCT</th>
+        <th>COMPANY</th>
+        <th>SIZE</th>
+        <th>MRP</th>
+        <th>DISCOUNT %</th>
+        <th>PRICE</th>
+        <th>EDIT</th>
+      </tr>
+    </table>
+    <button class="closeBtn" onClick="closeResult()">CLOSE</button>
+  </div>
+</div>
+
+<div class="popupOverlay" id="adminPopup">
+  <div class="popupBox">
+    <h3>ADMIN PANEL</h3>
+    <input id="apass" class="edit" placeholder="PASSWORD">
+    <button onClick="loginAdmin()">LOGIN</button>
+
+    <div id="adminPanel" style="display:none;">
+      <h4>Paste products, company, size, MRP, and Price separately</h4>
+      <textarea id="pasteProducts" class="edit" placeholder="PASTE PRODUCT NAMES" rows="3"></textarea>
+      <textarea id="pasteCompany" class="edit" placeholder="PASTE COMPANY NAMES" rows="3"></textarea>
+      <textarea id="pasteSize" class="edit" placeholder="PASTE SIZE" rows="3"></textarea>
+      <textarea id="pasteMRP" class="edit" placeholder="PASTE MRP" rows="3"></textarea>
+      <textarea id="pastePrice" class="edit" placeholder="PASTE PRICE" rows="3"></textarea>
+      <button onClick="pasteAll()">SAVE ALL</button>
+      <button class="deleteBtn" onClick="deleteAll()">DELETE ALL</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let db;
+const ADMIN_PASS="admin123";
+
+indexedDB.open("ProductDB",1).onupgradeneeded=e=>{
+  db=e.target.result;
+  db.createObjectStore("products",{keyPath:"name"});
+};
+indexedDB.open("ProductDB",1).onsuccess=e=>db=e.target.result;
+
+function openAdmin(){adminPopup.style.display="flex";}
+function closeAdmin(){adminPopup.style.display="none";adminPanel.style.display="none";}
+function loginAdmin(){
+  if(apass.value===ADMIN_PASS){
+    adminPanel.style.display="block";
+    alert("ADMIN LOGIN SUCCESS");
+  }else alert("WRONG PASSWORD");
+}
+
+// ---------- SAVE ALL ----------
+function pasteAll(){
+  let products = pasteProducts.value.trim().split(/\r?\n/);
+  let company = pasteCompany.value.trim().split(/\r?\n/);
+  let size = pasteSize.value.trim().split(/\r?\n/);
+  let mrps = pasteMRP.value.trim().split(/\r?\n/);
+  let prices = pastePrice.value.trim().split(/\r?\n/);
+  
+  let maxLen = Math.max(products.length, company.length, size.length, mrps.length, prices.length);
+  let tx=db.transaction("products","readwrite");
+  let store=tx.objectStore("products");
+  
+  for(let i=0;i<maxLen;i++){
+    let name = (products[i] || "").toUpperCase().trim();
+    if(!name) continue;
+    let comp = company[i] || "";
+    let sz = size[i] || "";
+    let mrp = mrps[i] ? parseFloat(mrps[i]) : null;
+    let price = prices[i] ? parseFloat(prices[i]) : null;
+    let discount = (mrp && price) ? ((mrp-price)/mrp*100).toFixed(2) : null;
+    store.put({name, comp, sz, mrp, price, discount});
+  }
+  
+  alert("PRODUCTS SAVED/UPDATED SUCCESSFULLY!");
+  pasteProducts.value=""; pasteCompany.value=""; pasteSize.value=""; pasteMRP.value=""; pastePrice.value="";
+}
+
+// ---------- DELETE ALL ----------
+function deleteAll(){
+  if(confirm("Are you sure you want to delete all products?")){
+    let tx=db.transaction("products","readwrite");
+    tx.objectStore("products").clear();
+    alert("ALL PRODUCTS DELETED!");
+  }
+}
+
+/* AUTOCOMPLETE */
+searchInput.addEventListener("input",()=>{
+  searchInput.value=searchInput.value.toUpperCase();
+  let val=searchInput.value.toLowerCase();
+  let box=suggestions;
+  box.innerHTML="";
+  if(!val){box.style.display="none";return;}
+  db.transaction("products").objectStore("products").getAll().onsuccess=e=>{
+    let res=e.target.result.filter(p=>p.name.toLowerCase().includes(val));
+    if(res.length===0){box.style.display="none";return;}
+    res.forEach(p=>{
+      let d=document.createElement("div");
+      d.textContent=p.name;
+      d.onclick=()=>{searchInput.value=p.name;box.style.display="none";}
+      box.appendChild(d);
+    });
+    box.style.display="block";
+  };
+});
+
+/* SEARCH ALL MATCHING PRODUCTS */
+function searchProduct(){
+  let key = searchInput.value.toUpperCase().trim();
+  let table = resultTable;
+  table.innerHTML=`<tr>
+    <th>PRODUCT</th><th>COMPANY</th><th>SIZE</th><th>MRP</th><th>DISCOUNT %</th><th>PRICE</th><th>EDIT</th>
+  </tr>`;
+  
+  db.transaction("products").objectStore("products").getAll().onsuccess = e => {
+    let products = e.target.result.filter(p => p.name.includes(key));
+    if(products.length === 0){
+      alert("NO PRODUCT FOUND");
+      return;
+    }
+    products.forEach(p => {
+      let r = table.insertRow();
+      r.insertCell().textContent = p.name;
+      r.insertCell().textContent = p.comp ?? "-";
+      r.insertCell().textContent = p.sz ?? "-";
+      r.insertCell().textContent = p.mrp ?? "-";
+      r.insertCell().textContent = p.discount ?? "-";
+      r.insertCell().textContent = p.price ?? "-";
+      
+      let btn = document.createElement("button");
+      btn.textContent = "EDIT";
+      btn.className = "editBtn";
+      btn.onclick = () => {
+        openAdmin();
+        pasteProducts.value = p.name;
+        pasteCompany.value = p.comp ?? "";
+        pasteSize.value = p.sz ?? "";
+        pasteMRP.value = p.mrp ?? "";
+        pastePrice.value = p.price ?? "";
+      };
+      r.insertCell().appendChild(btn);
+    });
+    
+    resultPopup.style.display = "flex";
+  };
+}
+
+searchInput.addEventListener("keyup",e=>{if(e.key==="Enter")searchProduct();});
+function closeResult(){resultPopup.style.display="none";}
+</script>
+
+</body>
+</html>

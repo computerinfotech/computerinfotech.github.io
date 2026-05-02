@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SEARCH NYCLD  STUDENT</title>
+<style>
+html, body {
+    margin:0; padding:0; height:100%; overflow-x:hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color:#fff; display:flex; flex-direction:column; align-items:center;
+    transition: background 0.5s, opacity 0.5s;
+}
+
+/* Top Buttons */
+.top-buttons { display:flex; justify-content:space-between; width:90%; margin-top:20px; z-index:1;}
+.top-buttons button {cursor:pointer; border:none; border-radius:8px; color:#fff; font-weight:bold; font-size:18px; padding:14px 28px; transition:0.3s; box-shadow:0 0 10px rgba(255,255,255,0.2);}
+.adminBtn { background: linear-gradient(45deg, #06f, #0ff);}
+.totalBtn { background: linear-gradient(45deg, #f0f, #f06);}
+.top-buttons button:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(255,255,255,0.6);}
+
+/* Header */
+.header-box { background: rgba(0,0,0,0.5); padding:30px 120px; border-radius:15px; text-align:center; box-shadow:0 0 30px rgba(0,255,255,0.3); margin-top:40px; width:auto; position:relative; z-index:1;}
+.header-box img { background:#fff; border-radius:10px; width:600px; height:auto; }
+
+/* Search Panel */
+#searchPanel { display:flex; flex-direction:column; align-items:center; background: rgba(255,255,255,0.05); padding:25px 40px; border-radius:20px; box-shadow:0 0 30px rgba(0,255,255,0.3); backdrop-filter:blur(10px); margin-top:40px; z-index:1;}
+#searchPanel input { width:320px; padding:16px; border-radius:5px; border:2px solid #0ff; font-weight:bold; font-size:20px; color:#fff; text-align:center; background: rgba(0,0,0,0.4); outline:none; text-shadow:0 0 5px #0ff;}
+#searchPanel input::placeholder { color:#0ff; font-weight:bold; }
+#searchButtons { display:flex; gap:15px; margin-top:15px; }
+#searchButtons button { padding:12px 22px; font-weight:bold; border-radius:5px; border:none; cursor:pointer; color:#fff; font-size:16px;}
+#searchBtn { background: linear-gradient(45deg, #0f0, #0a0); }
+#cancelBtn { background: linear-gradient(45deg, #f00, #800); }
+
+/* Loader Overlay */
+#loaderOverlay {
+    display:none;
+    position:fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(15,32,39,0.8);
+    z-index:10000;
+    justify-content:center; 
+    align-items:center; 
+    flex-direction:column;
+    color:#0ff;
+    font-weight:bold;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #06f;
+}
+.loader {
+    border: 8px solid rgba(255,255,255,0.1);
+    border-top: 8px solid #0ff;
+    border-radius:50%;
+    width:70px;
+    height:70px;
+    margin:20px auto;
+    animation:spin 1s linear infinite;
+    box-shadow: 0 0 20px #0ff, 0 0 40px #06f, 0 0 60px #0ff inset;
+}
+#loaderOverlay p {
+    font-size:20px;
+    margin-top:15px;
+    color:#fff;
+    text-shadow:0 0 10px #0ff, 0 0 20px #06f;
+}
+@keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+
+/* Student Page Container */
+#studentContainer{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(245,245,164,0.7); z-index:9999; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+#studentPage{
+    background:#fff; color:#000; border-radius:10px; padding:20px;
+    width:210mm; height:auto; min-height:297mm; margin:50px auto; 
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
+    position:relative; top:-150%; transition: top 1s ease;
+}
+#studentPageButtons { text-align:center; margin-top:20px; }
+#studentPageButtons button { padding:10px 20px; margin:0 10px; cursor:pointer; }
+
+/* Admin Popup */
+.popupOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;}
+.popupBox { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); width: 500px; padding: 30px; border-radius: 20px; text-align: center; max-height: 80%; overflow-y:auto; box-shadow:0 0 40px #0ff; color:#fff; position: relative;}
+#adminOverlay .popupBox input { width:90%; padding:12px; margin:15px auto; display:block; border-radius:5px; border:2px solid #0ff; font-size:16px;}
+#adminOverlay .popupBox .loginBtn { background: linear-gradient(45deg, #0f0, #0a0); color:#000; }
+#adminOverlay .popupBox .cancelBtn { background: linear-gradient(45deg,#f00,#800); }
+#uploadPanel { margin-top:20px; display:flex; flex-direction:column; align-items:center; }
+#uploadPanel input[type=file] { margin-bottom:10px; padding:8px; border-radius:5px; }
+#uploadPanel button { padding:10px 20px; margin-top:10px; cursor:pointer; }
+
+#adminRecords table{ border-collapse:collapse; width:100%; }
+#adminRecords th, #adminRecords td{ border:1px solid #fff; padding:8px; text-align:center; }
+#adminRecords th{ background:#222; }
+</style>
+</head>
+<body>
+
+<div class="top-buttons">
+    <button class="adminBtn" onClick="openAdmin()">ADMIN LOGIN</button>
+    <button class="totalBtn" onClick="showTotalRecords()">TOTAL RECORDS</button>
+</div>
+
+<div class="header-box">
+    <img src="NCI01.png" alt="COMPUTER INFOTECH LOGO">
+</div>
+
+<div id="searchPanel">
+    <input type="text" id="searchStudent" placeholder="Enter Student Name">
+    <div id="searchButtons">
+        <button id="searchBtn" onClick="searchStudent()">SEARCH</button>
+        <button id="cancelBtn" onClick="cancelSearch()">CANCEL</button>
+    </div>
+</div>
+
+<!-- Loader -->
+<div id="loaderOverlay">
+    <div class="loader"></div>
+    <p>SEARCHING</p>
+	<p>Plaese Wait / कृप्या प्रतीक्षा करें</p>
+</div>
+
+<!-- Student Page Display -->
+<div id="studentContainer">
+    <div id="studentPage">
+        <div id="studentContent"></div>
+        <div id="studentPageButtons">
+            <button id="printBtn">PRINT</button>
+            <button onclick="backHome()">BACK</button>
+        </div>
+    </div>
+</div>
+
+<!-- Admin -->
+<div class="popupOverlay" id="adminOverlay">
+    <div class="popupBox">
+        <h3>ADMIN LOGIN</h3>
+        <input type="text" id="adminMobile" placeholder="Enter Mobile Number"><br>
+        <button class="loginBtn" onClick="checkAdmin()">LOGIN</button>
+        <button class="cancelBtn" onClick="closeAdmin()">CANCEL</button>
+
+        <div id="uploadPanel" style="display:none;">
+            <input type="file" id="htmlFile" accept=".html"><br>
+            <button onClick="saveRecord()">UPLOAD PAGE</button>
+            <button onClick="deleteAllRecords()" style="background:#f00;color:#fff;margin-top:10px;">DELETE ALL RECORDS</button>
+        </div>
+
+        <div id="adminRecords" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+<script>
+// Admin numbers
+const validAdmins = ["9563452015","8972984498","9932482798"];
+let db;
+
+// IndexedDB setup
+let request = indexedDB.open("StudentPageDB",1);
+request.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("pages",{keyPath:"id",autoIncrement:true}); };
+request.onsuccess = e => { db = e.target.result; loadAdminRecords(); };
+
+// Admin functions
+function openAdmin(){ document.getElementById('adminOverlay').style.display='flex'; }
+function closeAdmin(){ document.getElementById('adminOverlay').style.display='none'; document.getElementById('uploadPanel').style.display='none'; }
+function checkAdmin(){
+    let mobile = document.getElementById('adminMobile').value.trim();
+    if(validAdmins.includes(mobile)){
+        document.getElementById('uploadPanel').style.display='flex';
+        alert("ADMIN LOGIN SUCCESSFUL");
+        loadAdminRecords();
+    } else alert("INVALID MOBILE NUMBER");
+}
+
+// Upload HTML page
+function saveRecord(){
+    let fileInput = document.getElementById('htmlFile');
+    if(fileInput.files.length===0){ alert("SELECT HTML FILE"); return; }
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = ()=> {
+        let htmlContent = reader.result;
+        let studentName = file.name.split('.')[0]; 
+        let tx = db.transaction("pages","readwrite");
+        tx.objectStore("pages").add({ studentName, htmlContent });
+        tx.oncomplete = ()=>{ fileInput.value=''; loadAdminRecords(); alert("PAGE UPLOADED"); };
+    };
+    reader.readAsText(file);
+}
+
+// Load admin records
+function loadAdminRecords(){
+    let container = document.getElementById('adminRecords');
+    container.innerHTML="<h3>UPLOADED PAGES</h3><table><tr><th>STUDENT</th><th>ACTION</th></tr></table>";
+    let table = container.querySelector("table");
+    db.transaction("pages").objectStore("pages").openCursor().onsuccess = e => {
+        let cursor = e.target.result;
+        if(cursor){
+            let r = cursor.value;
+            let tr = document.createElement("tr");
+            tr.innerHTML=`<td>${r.studentName}</td>
+            <td>
+                <button onclick="viewStudent(${cursor.key})">VIEW</button>
+                <button onclick="deleteRecord(${cursor.key})">DELETE</button>
+            </td>`;
+            table.appendChild(tr);
+            cursor.continue();
+        }
+    };
+}
+
+// Delete one/all
+function deleteRecord(id){ if(confirm("DELETE THIS RECORD?")){ db.transaction("pages","readwrite").objectStore("pages").delete(id).oncomplete = ()=>{ loadAdminRecords(); } } }
+function deleteAllRecords(){ if(confirm("DELETE ALL RECORDS?")){ db.transaction("pages","readwrite").objectStore("pages").clear().oncomplete = ()=>{ loadAdminRecords(); } } }
+
+// View student from admin
+function viewStudent(id){
+    db.transaction("pages").objectStore("pages").get(id).onsuccess = e => { showStudentPage(e.target.result); closeAdmin(); };
+}
+
+// Search student
+function searchStudent(){
+    let val = document.getElementById('searchStudent').value.trim().toLowerCase();
+    if(!val){ alert("ENTER STUDENT NAME"); return; }
+
+    let loader = document.getElementById('loaderOverlay');
+    loader.style.display='flex';
+    document.querySelectorAll('.top-buttons, .header-box, #searchPanel').forEach(el=>el.style.opacity='0.3');
+
+    setTimeout(() => {
+        db.transaction("pages").objectStore("pages").getAll().onsuccess = e => {
+            loader.style.display='none';
+            let results = e.target.result.filter(r => r.studentName.toLowerCase().includes(val));
+            if(results.length === 0){ 
+                alert("NO RECORD FOUND"); 
+                document.querySelectorAll('.top-buttons, .header-box, #searchPanel').forEach(el=>el.style.opacity='1'); 
+                return; 
+            }
+            showStudentPage(results[0]);
+        };
+    }, 5000);
+}
+
+function showStudentPage(r){
+    let container = document.getElementById('studentContainer');
+    let pageDiv = document.getElementById('studentPage');
+    let contentDiv = document.getElementById('studentContent');
+
+    contentDiv.innerHTML = r.htmlContent;
+    container.style.display='block';
+    pageDiv.style.top='-150%';
+    setTimeout(()=>{ pageDiv.style.top='0'; }, 50);
+
+    document.getElementById('printBtn').onclick = function(){
+        let printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write(r.htmlContent);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+    };
+}
+
+function backHome(){
+    let container = document.getElementById('studentContainer');
+    let pageDiv = document.getElementById('studentPage');
+    pageDiv.style.top='-150%';
+    setTimeout(()=>{ container.style.display='none'; document.getElementById('studentContent').innerHTML=''; document.querySelectorAll('.top-buttons, .header-box, #searchPanel').forEach(el=>el.style.opacity='1'); document.getElementById('searchStudent').value=''; },1500);
+}
+
+// Total records
+function showTotalRecords(){
+    let count=0;
+    db.transaction("pages").objectStore("pages").openCursor().onsuccess = e => {
+        let cursor=e.target.result;
+        if(cursor){ count++; cursor.continue(); }
+        else{ alert("TOTAL PAGES: "+count); }
+    };
+}
+
+// Cancel search
+function cancelSearch(){ document.getElementById('searchStudent').value=''; }
+
+// Enter key triggers
+document.getElementById('searchStudent').addEventListener("keydown", function(e){ if(e.key==="Enter"){ searchStudent(); } });
+document.getElementById('adminMobile').addEventListener("keydown", function(e){ if(e.key==="Enter"){ checkAdmin(); } });
+</script>
+</body>
+</html>

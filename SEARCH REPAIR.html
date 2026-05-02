@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>COMPUTER INFOTECH JOB SEARCH</title>
+<style>
+html, body {margin:0;padding:0;font-family:'Segoe UI', sans-serif;background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;}
+.header-box {background: rgba(255,255,255,0.1); padding:30px 40px; text-align:center; margin:20px auto; border-radius:20px; backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2);}
+.header-box h1 {font-size:60px; font-weight:bold; color:#0ff; text-shadow:2px 2px 5px #000; margin:0;}
+.header-box h2 {font-size:22px; color:#fff; margin:5px 0 0 0; text-shadow:1px 1px 3px #000;}
+.top-buttons {display:flex; justify-content:space-between; width:90%; margin:20px auto;}
+.top-buttons button {cursor:pointer;border:none;border-radius:12px;color:#fff;font-weight:bold;font-size:16px;padding:12px 24px;box-shadow:0 5px 15px rgba(0,0,0,0.4);transition: all 0.3s ease;}
+.top-buttons button:hover {transform:translateY(-3px) scale(1.05);}
+.adminBtn {background: linear-gradient(135deg,#1abc9c,#16a085);}
+.totalBtn {background: linear-gradient(135deg,#e67e22,#d35400);}
+#searchPanel {display:flex; flex-direction:column; align-items:center; background: rgba(255,255,255,0.05); padding:20px 40px; border-radius:20px; margin:20px auto; backdrop-filter:blur(8px);}
+#searchPanel input {width:300px;padding:12px;border-radius:10px;border:2px solid #0ff;color:#fff;background: rgba(0,0,0,0.4); outline:none;text-align:center;font-weight:bold;font-size:20px;}
+#searchButtons {display:flex; gap:15px; margin-top:15px;}
+#searchButtons button {padding:10px 20px;font-weight:bold;border:none;cursor:pointer;color:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.3);transition: all 0.3s ease;}
+#searchBtn {background: linear-gradient(135deg,#27ae60,#2ecc71);}
+#cancelBtn {background: linear-gradient(135deg,#c0392b,#e74c3c);}
+#loaderOverlay {display:none; position:fixed;top:0;left:0;width:100%;height:100%;background: rgba(15,32,39,0.9); z-index:10000; justify-content:center; align-items:center; flex-direction:column; color:#0ff;}
+.loader {border:8px solid rgba(255,255,255,0.1); border-top:8px solid #0ff; border-radius:50%; width:50px;height:50px; animation:spin 1s linear infinite;}
+@keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.popupOverlay {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:flex-start; overflow:auto; padding:30px;}
+.popupBox {background: rgba(255,255,255,0.08);backdrop-filter: blur(20px);padding:30px;border-radius:25px;color:#fff;max-width:750px;width:100%; margin:auto; border:1px solid rgba(255,255,255,0.2); box-shadow:0 10px 30px rgba(0,0,0,0.6); position:relative;}
+.popupBox h3,h4{text-align:center;}
+.popupBox input, .popupBox select {width:95%; margin:8px auto; padding:10px; border-radius:8px; border:2px solid #0ff; display:block; background: rgba(0,0,0,0.4); color:#fff; outline:none;}
+.popupBox button {padding:10px 18px; margin-top:8px; cursor:pointer; font-weight:bold; border:none;border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.4); color:#fff; margin-right:5px; transition: all 0.3s ease;}
+.popupBox button:hover {transform:translateY(-2px) scale(1.05);}
+.popupBox .uploadBtn{background: linear-gradient(135deg,#2980b9,#3498db);}
+.popupBox .saveBtn{background: linear-gradient(135deg,#27ae60,#2ecc71);}
+.popupBox .loginBtn{background: linear-gradient(135deg,#f39c12,#f1c40f);}
+.closeBtn {position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;background:linear-gradient(135deg,#e74c3c,#c0392b); border:none; color:#fff; border-radius:50%; width:35px; height:35px; display:flex; justify-content:center; align-items:center; font-weight:bold; box-shadow:0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s ease;}
+.closeBtn:hover {transform:rotate(90deg) scale(1.1);}
+table {width:100%; border-collapse: collapse; margin-top:10px; background-color: #fff9c4; color:#000; border-radius:10px; overflow:hidden;}
+th, td {border:1px solid rgba(0,0,0,0.2); padding:10px; text-align:center;}
+#searchResultTable th {background-color: #a0d8ef; color:#000; font-weight:bold;}
+#statusTable th {background-color:#a0d8ef; font-weight:bold;}
+#statusTable td {font-weight:bold;}
+#pdfViewer {width:100%; height:500px; margin-top:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.2);}
+.searchBtnView {background-color:#3498db;}
+.searchBtnDownload {background-color:#e74c3c;}
+.searchBtnStatus {background-color:#27ae60;}
+#allDeleteBtn{background: linear-gradient(135deg,#e74c3c,#c0392b); margin-top:10px;}
+.totalPdfContainer img{width:100px; margin:5px; border-radius:8px; border:2px solid #fff; }
+.style1 {color: #FFFF00}
+</style>
+</head>
+<body>
+
+<div class="top-buttons">
+    <button class="adminBtn" onClick="openAdmin()">ADMIN LOGIN</button>
+    <button class="totalBtn" onClick="showTotalRecords()">TOTAL RECORDS</button>
+</div>
+
+<div class="header-box">
+    <h1 class="style1">COMPUTER INFOTECH</h1>
+    <h2>BUDBUD, PURBA BARDHAMAN</h2>
+</div>
+
+<div id="searchPanel">
+    <input type="text" id="searchJob" placeholder="Enter Job No.">
+    <div id="searchButtons">
+        <button id="searchBtn" onClick="searchJob()">SEARCH</button>
+        <button id="cancelBtn" onClick="cancelSearch()">CANCEL</button>
+    </div>
+</div>
+
+<div id="loaderOverlay"><div class="loader"></div><p>SEARCHING</p></div>
+
+<!-- ADMIN POPUP -->
+<div class="popupOverlay" id="adminOverlay">
+    <div class="popupBox">
+        <button class="closeBtn" onClick="closeAdmin()">✖</button>
+        <h3>ADMIN LOGIN</h3>
+        <input type="text" id="adminMobile" placeholder="Enter Mobile Number">
+        <button class="loginBtn" onClick="checkAdmin()">LOGIN</button>
+
+        <div id="uploadPanel" style="display:none;">
+            <h4>UPLOAD PDF FILES</h4>
+            <input type="file" id="pdfFiles" multiple accept=".pdf">
+            <button class="uploadBtn" onClick="savePDFs()">UPLOAD PDF(s)</button>
+            <button class="saveBtn" id="allDeleteBtn" onClick="deleteAllPDFs()">DELETE ALL PDF(s)</button>
+            <div id="pdfList"></div>
+        </div>
+
+        <button class="saveBtn" style="margin-top:15px;" onClick="openManualEntry()">MANUAL ENTRY</button>
+    </div>
+</div>
+
+<!-- MANUAL ENTRY POPUP -->
+<div class="popupOverlay" id="manualEntryPopup">
+    <div class="popupBox">
+        <button class="closeBtn" onClick="closeManualEntry()">✖</button>
+        <h3>MANUAL JOB ENTRY</h3>
+        <input type="text" id="jobNoManual" placeholder="Job No">
+        <input type="date" id="entryDate">
+        <input type="date" id="deliveryDate">
+        <select id="status">
+            <option value="Pending">Pending</option>
+            <option value="Complete">Complete</option>
+            <option value="Return">Return</option>
+        </select>
+        <button class="saveBtn" onClick="saveManualEntry()">SAVE</button>
+    </div>
+</div>
+
+<!-- SEARCH RESULT POPUP -->
+<div class="popupOverlay" id="searchResultPopup">
+    <div class="popupBox">
+        <button class="closeBtn" onClick="closeSearchPopup()">✖</button>
+        <h3>Search Results</h3>
+        <table id="searchResultTable">
+            <thead><tr><th>Job No</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <div id="pdfViewerContainer"></div>
+    </div>
+</div>
+
+<!-- STATUS POPUP -->
+<div class="popupOverlay" id="statusPopup">
+    <div class="popupBox">
+        <button class="closeBtn" onClick="closeStatusPopup()">✖</button>
+        <h3>JOB STATUS</h3>
+        <table id="statusTable"></table>
+    </div>
+</div>
+
+<!-- TOTAL RECORD POPUP -->
+<div class="popupOverlay" id="totalRecordsPopup">
+    <div class="popupBox">
+        <button class="closeBtn" onClick="closeTotalRecordsPopup()">✖</button>
+        <h3>Total Uploaded PDFs</h3>
+        <div class="totalPdfContainer" id="totalPdfContainer"></div>
+    </div>
+</div>
+
+<script>
+const validAdmins = ["9563452015","8972984498","9932482798"];
+let db;
+
+// IndexedDB setup
+let request = indexedDB.open("JobPDFDB",1);
+request.onupgradeneeded = e=>{
+    db=e.target.result;
+    if(!db.objectStoreNames.contains("pdfs")) db.createObjectStore("pdfs",{keyPath:"jobNo"});
+    if(!db.objectStoreNames.contains("manualEntries")) db.createObjectStore("manualEntries",{keyPath:"id",autoIncrement:true});
+};
+request.onsuccess = e=>{ db=e.target.result; loadPDFList(); };
+
+// ENTER KEY PRESS SEARCH & LOGIN
+document.getElementById('searchJob').addEventListener("keypress",function(e){
+    if(e.key==='Enter'){searchJob();}
+});
+document.getElementById('adminMobile').addEventListener("keypress",function(e){
+    if(e.key==='Enter'){checkAdmin();}
+});
+
+// ADMIN
+function openAdmin(){document.getElementById('adminOverlay').style.display='flex';}
+function closeAdmin(){document.getElementById('adminOverlay').style.display='none'; document.getElementById('uploadPanel').style.display='none'; closeManualEntry();}
+function checkAdmin(){
+    let mobile = document.getElementById('adminMobile').value.trim();
+    if(validAdmins.includes(mobile)){
+        alert("LOGIN SUCCESSFUL"); 
+        document.getElementById('uploadPanel').style.display='block'; 
+        loadPDFList();
+    } else alert("INVALID MOBILE NUMBER");
+}
+
+// PDF Upload
+function savePDFs(){
+    let files=document.getElementById('pdfFiles').files;
+    if(files.length===0){alert("SELECT PDF FILE(S)"); return;}
+    for(let f of files){
+        let reader=new FileReader();
+        reader.onload=e=>{
+            // prevent duplicate upload
+            let tx=db.transaction("pdfs","readonly").objectStore("pdfs").get(f.name.split('.')[0]);
+            tx.onsuccess=ev=>{
+                if(ev.target.result){alert(f.name+" already uploaded"); return;}
+                db.transaction("pdfs","readwrite").objectStore("pdfs").add({jobNo:f.name.split('.')[0], pdfName:f.name, pdfData:e.target.result}).onsuccess=()=>{ loadPDFList(); };
+            };
+        };
+        reader.readAsDataURL(f);
+    }
+    alert("PDF(s) UPLOADED"); document.getElementById('pdfFiles').value="";
+}
+
+// Load PDF list
+function loadPDFList(){
+    let container=document.getElementById('pdfList');
+    container.innerHTML="<h4>UPLOADED PDFs</h4><ul></ul>";
+    let ul=container.querySelector("ul");
+    db.transaction("pdfs").objectStore("pdfs").getAll().onsuccess=e=>{
+        e.target.result.forEach(p=>{
+            let li=document.createElement('li');
+            li.textContent=p.pdfName + " (Job No: " + p.jobNo + ")";
+            ul.appendChild(li);
+        });
+    };
+}
+
+// Delete all PDFs
+function deleteAllPDFs(){
+    if(confirm("Are you sure you want to delete all PDFs?")){
+        let tx=db.transaction("pdfs","readwrite").objectStore("pdfs").clear();
+        tx.onsuccess=()=>{ alert("All PDFs deleted"); loadPDFList(); };
+    }
+}
+
+// Manual Entry
+function openManualEntry(){document.getElementById('manualEntryPopup').style.display='flex';}
+function closeManualEntry(){document.getElementById('manualEntryPopup').style.display='none';}
+function saveManualEntry(){
+    let jobNo=document.getElementById('jobNoManual').value.trim();
+    let entryDate=document.getElementById('entryDate').value;
+    let deliveryDate=document.getElementById('deliveryDate').value;
+    let status=document.getElementById('status').value;
+    if(!jobNo || !entryDate || !deliveryDate){alert("FILL ALL FIELDS"); return;}
+    db.transaction("manualEntries","readwrite").objectStore("manualEntries").add({jobNo,entryDate,deliveryDate,status}).onsuccess=()=>{ 
+        alert("MANUAL ENTRY SAVED"); 
+        closeManualEntry();
+    };
+    document.getElementById('jobNoManual').value=''; document.getElementById('entryDate').value=''; document.getElementById('deliveryDate').value=''; document.getElementById('status').value='Pending';
+}
+
+// Search
+function searchJob(){
+    let val = document.getElementById('searchJob').value.trim().toLowerCase();
+    if(!val){alert("ENTER JOB NO."); return;}
+    const loader=document.getElementById('loaderOverlay'); loader.style.display='flex';
+    setTimeout(()=>{
+        db.transaction("pdfs").objectStore("pdfs").getAll().onsuccess=e=>{
+            let pdfResults=e.target.result.filter(x=>x.jobNo.toLowerCase().includes(val));
+            db.transaction("manualEntries").objectStore("manualEntries").getAll().onsuccess=e2=>{
+                loader.style.display='none';
+                let manualResults=e2.target.result.filter(x=>x.jobNo.toLowerCase()===val);
+                if(pdfResults.length===0 && manualResults.length===0){alert("NO RECORD FOUND"); return;}
+                showSearchResultPopup(pdfResults,manualResults);
+            };
+        };
+    },500);
+}
+
+// Show search results
+function showSearchResultPopup(pdfResults,manualResults){
+    const popup=document.getElementById('searchResultPopup'); 
+    const tbody=document.getElementById('searchResultTable').querySelector('tbody');
+    tbody.innerHTML=""; 
+    document.getElementById('pdfViewerContainer').innerHTML='';
+
+    let manualJobMap = {};
+    manualResults.forEach(r=>manualJobMap[r.jobNo]=r);
+
+    pdfResults.forEach(r=>{
+        let tr=document.createElement('tr'); 
+        tr.innerHTML=`<td>${r.jobNo}</td>`; 
+        let td=document.createElement('td');
+        let viewBtn=document.createElement('button'); viewBtn.textContent="View"; viewBtn.className="searchBtnView"; 
+        viewBtn.onclick=()=>{ showPDF(r.pdfData); };
+        let downloadBtn=document.createElement('button'); downloadBtn.textContent="Download"; downloadBtn.className="searchBtnDownload"; 
+        downloadBtn.onclick=()=>{ downloadPDF(r.pdfName,r.pdfData); };
+        td.appendChild(viewBtn); td.appendChild(downloadBtn); 
+
+        // Only show status if manual entry exists
+        if(manualJobMap[r.jobNo]){
+            let statusBtn=document.createElement('button'); statusBtn.textContent="Status"; statusBtn.className="searchBtnStatus";
+            statusBtn.onclick=()=>{ showJobStatus(r.jobNo); };
+            td.appendChild(statusBtn);
+        }
+
+        tr.appendChild(td); tbody.appendChild(tr);
+    });
+
+    popup.style.display='flex';
+}
+
+function closeSearchPopup(){document.getElementById('searchResultPopup').style.display='none'; document.getElementById('pdfViewerContainer').innerHTML='';}
+
+// PDF View
+function showPDF(data){ document.getElementById('pdfViewerContainer').innerHTML=`<iframe id="pdfViewer" src="${data}" frameborder="0"></iframe>`; }
+function downloadPDF(name,data){ let a=document.createElement('a'); a.href=data; a.download=name; a.click(); }
+
+// Job Status
+function showJobStatus(jobNo){
+    db.transaction("manualEntries").objectStore("manualEntries").getAll().onsuccess=e=>{
+        let entries=e.target.result.filter(en=>en.jobNo===jobNo); if(entries.length===0){alert("No manual entry found"); return;}
+        const table=document.getElementById('statusTable'); 
+        table.innerHTML="<tr style='background-color:#a0d8ef;'><th>Job No</th><th>Entry Date</th><th>Delivery Date</th><th>Status</th></tr>";
+        entries.forEach(en=>{
+            let tr=document.createElement('tr'); 
+            tr.innerHTML=`<td>${en.jobNo}</td><td>${en.entryDate}</td><td>${en.deliveryDate}</td><td>${en.status}</td>`;
+            table.appendChild(tr);
+        });
+        document.getElementById('statusPopup').style.display='flex';
+    };
+}
+function closeStatusPopup(){document.getElementById('statusPopup').style.display='none';}
+
+// Total Records
+function showTotalRecords(){
+    db.transaction("pdfs").objectStore("pdfs").getAll().onsuccess=e=>{
+        let container=document.getElementById('totalPdfContainer');
+        container.innerHTML='';
+        e.target.result.forEach(p=>{
+            let img=document.createElement('img'); img.src='https://via.placeholder.com/100x100.png?text='+encodeURIComponent(p.jobNo);
+            img.title=p.pdfName; container.appendChild(img);
+        });
+        document.getElementById('totalRecordsPopup').style.display='flex';
+    };
+}
+function closeTotalRecordsPopup(){document.getElementById('totalRecordsPopup').style.display='none';}
+
+// Cancel Search
+function cancelSearch(){document.getElementById('searchJob').value='';}
+
+</script>
+
+</body>
+</html>
